@@ -3,9 +3,30 @@ import { Button, InputGroup, FormControl } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Formik, Form } from "formik";
 import userProfileSchema from "../../schemas/userProfile";
+import { useSelector, useDispatch } from "react-redux";
+import { DECREMENT_COUNT, updateCountValue } from "../../action/countAction";
 
 
-const userProfile = () => {
+const UserProfile = () => {
+
+  const dispatch = useDispatch();
+
+  const {countValue} = useSelector( state => {
+    const countValue = state?.count;
+    return { countValue }
+  }); 
+
+  const updateCount = () => {
+    return dispatch(updateCountValue(countValue+1))
+  }
+
+  const removeCount = () => { 
+    return dispatch({
+      type: DECREMENT_COUNT,
+      payload: countValue-1})
+  }
+  
+
   return (
     <div className="row">
       <div className="col-md-6 col-md-offset-3">
@@ -130,9 +151,13 @@ const userProfile = () => {
             </Form>
           )}
         </Formik>
+
+        <Button onClick={removeCount}>-</Button>
+          <p>{countValue} count</p>
+        <Button onClick={updateCount}>+</Button>
       </div>
     </div>
   );
 };
 
-export default userProfile;
+export default UserProfile;
